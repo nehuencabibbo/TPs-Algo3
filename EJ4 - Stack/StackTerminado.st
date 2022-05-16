@@ -158,7 +158,7 @@ test01CannotCreateAStackWithNegativeNumbersAsALimit
 		raise: Error
 		withExceptionDo: consecuenceOfCreatingAStackWithANegativeLimit.! !
 
-!LimitedOOStackTest methodsFor: 'test' stamp: 'ca 5/15/2022 19:31:11'!
+!LimitedOOStackTest methodsFor: 'test' stamp: 'ca 5/16/2022 11:32:20'!
 test02CannotPushElementsToAFullStack
 
 	| aLimitedOOStack anActionThatShouldFail aConsecuenceOfTheActionThatShouldFail | 
@@ -166,6 +166,8 @@ test02CannotPushElementsToAFullStack
 	aLimitedOOStack := LimitedOOStack withALimitOfElements: 1.
 	
 	aLimitedOOStack push: 'aaa'.
+	
+	self assert: aLimitedOOStack  isFull.
 	
 	anActionThatShouldFail := [ aLimitedOOStack push: 'aaaa'. ].
 	aConsecuenceOfTheActionThatShouldFail := [ :anError | 
