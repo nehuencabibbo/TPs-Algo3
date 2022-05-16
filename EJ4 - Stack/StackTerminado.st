@@ -91,7 +91,7 @@ test07TopDoesNotRemoveObjectFromStack
 	self assert: stack size = 1.
 	! !
 
-!OOStackTest methodsFor: 'test' stamp: 'ca 5/15/2022 20:08:02'!
+!OOStackTest methodsFor: 'test' stamp: 'HAW 4/14/2017 22:48:26'!
 test08CanNotPopWhenThereAreNoObjectsInTheStack
 
 	| stack  |
@@ -225,8 +225,26 @@ test02FindPrefixShouldNotContainABlank
 	
 		! !
 
-!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'NC 5/15/2022 00:17:11'!
-test03StackShouldNotBeModifiedAfterUsingFind
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/15/2022 19:44:20'!
+test03FindPrefixShouldBeAString
+
+	| anOOStack sentenceFinder findWhenPrefixIsNotAString aConsecuenceOfTheError |
+
+	
+	anOOStack := OOStack new.
+	sentenceFinder := SentenceFinderByPrefix with: anOOStack.
+	
+	findWhenPrefixIsNotAString := [ sentenceFinder find: 2. ].
+	aConsecuenceOfTheError := [ :anError | 
+		self assert: anError messageText = APrefixThatsNotString invalidPrefixErrorDescription ].
+	
+	self 
+		should: findWhenPrefixIsNotAString 
+		raise: Error
+		withExceptionDo: aConsecuenceOfTheError.! !
+
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/15/2022 21:25:11'!
+test04StackShouldNotBeModifiedAfterUsingFind
 
 	| anOOStack sentenceFinder | 
 	
@@ -245,8 +263,8 @@ test03StackShouldNotBeModifiedAfterUsingFind
 	
 ! !
 
-!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'NC 5/15/2022 00:18:32'!
-test04FindShouldReturnAnEmptyOrderedCollectionWhenLookingForAStringWithAPrefixThatsNotInTheStack
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/15/2022 21:25:20'!
+test05FindShouldReturnAnEmptyOrderedCollectionWhenLookingForAStringWithAPrefixThatsNotInTheStack
 
 	| anOOStack sentenceFinder | 
 	
@@ -255,8 +273,8 @@ test04FindShouldReturnAnEmptyOrderedCollectionWhenLookingForAStringWithAPrefixTh
 	
 	self assert: (sentenceFinder find: 'Wint') isEmpty.! !
 
-!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'NC 5/15/2022 00:19:16'!
-test05FindShouldBeCaseSensitive
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/15/2022 21:25:28'!
+test06FindShouldBeCaseSensitive
 
 	| anOOStack sentenceFinder | 
 	
@@ -267,8 +285,8 @@ test05FindShouldBeCaseSensitive
 	
 	self assert: (sentenceFinder find: 'aaa') isEmpty.! !
 
-!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'NC 5/15/2022 00:20:32'!
-test06FindReturnsTheCorrectStringWhenTheresOnlyOneStringThatMatchesPrefix
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/15/2022 21:25:36'!
+test07FindReturnsTheCorrectStringWhenTheresOnlyOneStringThatMatchesPrefix
 
 	| anOOStack sentenceFinder listOfFoundWords | 
 	
@@ -283,8 +301,8 @@ test06FindReturnsTheCorrectStringWhenTheresOnlyOneStringThatMatchesPrefix
 	self assert: (listOfFoundWords size = 1 and: (listOfFoundWords at: 1) = 'Winter is here').
 	! !
 
-!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'NC 5/14/2022 23:58:48'!
-test07FindReturnsTheCorrectStringsWhenTheresMoreThanOneStringThatMatchesPrefix
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/15/2022 21:25:42'!
+test08FindReturnsTheCorrectStringsWhenTheresMoreThanOneStringThatMatchesPrefix
 
 	| anOOStack sentenceFinder listOfFoundWords | 
 	
@@ -357,10 +375,35 @@ invalidPrefixErrorDescription
 ! !
 
 
-!APrefixThatContainsABlank class methodsFor: 'validations' stamp: 'ca 5/15/2022 20:06:24'!
+!APrefixThatContainsABlank class methodsFor: 'validations' stamp: 'ca 5/15/2022 20:28:16'!
 isThisPrefixValid: aPrefix
 	
-	^ aPrefix includesSubString: ' '! !
+	^ aPrefix isString and: [aPrefix includesSubString: ' ']! !
+
+
+!classDefinition: #APrefixThatsNotString category: 'Stack-Exercise'!
+InvalidPrefix subclass: #APrefixThatsNotString
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Stack-Exercise'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'APrefixThatsNotString class' category: 'Stack-Exercise'!
+APrefixThatsNotString class
+	instanceVariableNames: ''!
+
+!APrefixThatsNotString class methodsFor: 'error description' stamp: 'ca 5/15/2022 19:35:19'!
+invalidPrefixErrorDescription
+
+	^ 'Prefix should be a string'.! !
+
+
+!APrefixThatsNotString class methodsFor: 'validations' stamp: 'ca 5/15/2022 19:58:17'!
+isThisPrefixValid: aPrefix
+
+	^ aPrefix isString not.! !
 
 
 !classDefinition: #EmptyPrefix category: 'Stack-Exercise'!
@@ -429,11 +472,22 @@ pop
 	
 	^aValueToReturn ! !
 
-!OOStack methodsFor: 'basic operations' stamp: 'ca 5/15/2022 20:05:43'!
+!OOStack methodsFor: 'basic operations' stamp: 'NC 5/15/2022 16:14:28'!
 push: aString 
 
 	stackStorage add: aString.
 	
+	"
+	self assertThatTheCurrentSizeIsNotTheLimit
+	-> 
+	assertThatTheCurrent...
+	
+		(self size = self limitOfElements) ifTrue: [ self error: self fullStackErrorDescription ].
+		
+		(self size < self limitOfElements) ifTrue: [ ]	
+	->
+	Tendriamos que implementar en OOStack el estado fullStack y lo que corresponda (pertenece etc)
+	" 
 	! !
 
 !OOStack methodsFor: 'basic operations' stamp: 'NC 5/15/2022 16:13:31'!
@@ -461,7 +515,7 @@ initialize
 OOStack class
 	instanceVariableNames: ''!
 
-!OOStack class methodsFor: 'error descriptions' stamp: 'ca 5/15/2022 20:08:22'!
+!OOStack class methodsFor: 'error descriptions' stamp: 'HernanWilkinson 5/7/2012 11:51'!
 stackEmptyErrorDescription
 	
 	^ 'Stack is empty'! !
@@ -479,19 +533,18 @@ isFull
 
 	^ self size = limit.! !
 
-!LimitedOOStack methodsFor: 'basic operations' stamp: 'ca 5/15/2022 20:05:26'!
+!LimitedOOStack methodsFor: 'basic operations' stamp: 'ca 5/15/2022 21:31:45'!
 push: aString 
 
 	self assertThatTheCurrentSizeIsNotTheLimit.
 	stackStorage add: aString.
-! !
+	! !
 
 
-!LimitedOOStack methodsFor: 'validations' stamp: 'ca 5/15/2022 20:05:12'!
+!LimitedOOStack methodsFor: 'private' stamp: 'ca 5/15/2022 21:32:07'!
 assertThatTheCurrentSizeIsNotTheLimit
 	
-	self status assertThatisNotFull.
-! !
+	self status assertThatisNotFull.! !
 
 
 !LimitedOOStack methodsFor: 'initialization' stamp: 'NC 5/15/2022 16:31:15'!
@@ -507,7 +560,7 @@ initializeWith: aLimitOfElements
 LimitedOOStack class
 	instanceVariableNames: ''!
 
-!LimitedOOStack class methodsFor: 'instance creation' stamp: 'ca 5/15/2022 20:09:23'!
+!LimitedOOStack class methodsFor: 'instance creation' stamp: 'ca 5/15/2022 21:47:48'!
 withALimitOfElements: aLimitOfElements
 
 	(aLimitOfElements < 0) ifTrue: [ self error: self creatingAStackWithANegativeLimitOfElementsErrorDescription ].
@@ -549,7 +602,7 @@ assertThatisNotFull
 OOStackStatus class
 	instanceVariableNames: ''!
 
-!OOStackStatus class methodsFor: 'validations' stamp: 'ca 5/15/2022 20:09:47'!
+!OOStackStatus class methodsFor: 'validations' stamp: 'ca 5/15/2022 21:31:16'!
 isTheStatusOf: aStack
 
 	self subclassResponsibility.! !
@@ -583,10 +636,10 @@ stackEmptyErrorDescription
 	^ 'Stack is empty'! !
 
 
-!EmptyStack class methodsFor: 'validations' stamp: 'ca 5/15/2022 20:10:25'!
-isTheStatusOf: aStack
+!EmptyStack class methodsFor: 'validations' stamp: 'ca 5/15/2022 21:31:05'!
+isTheStatusOf: anOOStack
 
-	^ (aStack size = 0) & ((aStack isFull) not)
+	^ (anOOStack size = 0) & ((anOOStack isFull) not)
 	 "En este caso isFull es para chequear q si el limite es 0, esta llleno."
 ! !
 
@@ -612,11 +665,11 @@ assertThatisNotFull
 FullStack class
 	instanceVariableNames: ''!
 
-!FullStack class methodsFor: 'validations' stamp: 'ca 5/15/2022 20:10:37'!
-isTheStatusOf: aOOStack
+!FullStack class methodsFor: 'validations' stamp: 'ca 5/15/2022 21:30:09'!
+isTheStatusOf: anOOStack
 	
-	^ aOOStack isFull.
-	! !
+	^ anOOStack isFull.
+! !
 
 
 !FullStack class methodsFor: 'error description' stamp: 'ca 5/15/2022 17:11:59'!
@@ -647,10 +700,11 @@ assertThatisNotFull
 NotEmptyStack class
 	instanceVariableNames: ''!
 
-!NotEmptyStack class methodsFor: 'validations' stamp: 'ca 5/15/2022 20:10:54'!
-isTheStatusOf: aStack
+!NotEmptyStack class methodsFor: 'validations' stamp: 'ca 5/15/2022 21:30:20'!
+isTheStatusOf: anOOStack
 	
-	^ (aStack size ~= 0) & ((aStack isFull) not)! !
+	^ (anOOStack size ~= 0) & ((anOOStack isFull) not)
+	! !
 
 
 !classDefinition: #SentenceFinderByPrefix category: 'Stack-Exercise'!
@@ -666,7 +720,7 @@ initializeWith: anOOStack
 	stack := anOOStack! !
 
 
-!SentenceFinderByPrefix methodsFor: 'private' stamp: 'ca 5/15/2022 20:03:49'!
+!SentenceFinderByPrefix methodsFor: 'private' stamp: 'ca 5/15/2022 21:27:44'!
 assertThatAPrefixIsValid: aPrefix
 	
 	| invalidStringSubclases |
