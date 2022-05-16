@@ -227,26 +227,8 @@ test02FindPrefixShouldNotContainABlank
 	
 		! !
 
-!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/15/2022 19:44:20'!
-test03FindPrefixShouldBeAString
-
-	| anOOStack sentenceFinder findWhenPrefixIsNotAString aConsecuenceOfTheError |
-
-	
-	anOOStack := OOStack new.
-	sentenceFinder := SentenceFinderByPrefix with: anOOStack.
-	
-	findWhenPrefixIsNotAString := [ sentenceFinder find: 2. ].
-	aConsecuenceOfTheError := [ :anError | 
-		self assert: anError messageText = APrefixThatsNotString invalidPrefixErrorDescription ].
-	
-	self 
-		should: findWhenPrefixIsNotAString 
-		raise: Error
-		withExceptionDo: aConsecuenceOfTheError.! !
-
-!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/15/2022 21:25:11'!
-test04StackShouldNotBeModifiedAfterUsingFind
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/16/2022 18:32:36'!
+test03StackShouldNotBeModifiedAfterUsingFind
 
 	| anOOStack sentenceFinder | 
 	
@@ -265,8 +247,8 @@ test04StackShouldNotBeModifiedAfterUsingFind
 	
 ! !
 
-!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/15/2022 21:25:20'!
-test05FindShouldReturnAnEmptyOrderedCollectionWhenLookingForAStringWithAPrefixThatsNotInTheStack
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/16/2022 18:32:42'!
+test04FindShouldReturnAnEmptyOrderedCollectionWhenLookingForAStringWithAPrefixThatsNotInTheStack
 
 	| anOOStack sentenceFinder | 
 	
@@ -275,8 +257,8 @@ test05FindShouldReturnAnEmptyOrderedCollectionWhenLookingForAStringWithAPrefixTh
 	
 	self assert: (sentenceFinder find: 'Wint') isEmpty.! !
 
-!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/15/2022 21:25:28'!
-test06FindShouldBeCaseSensitive
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/16/2022 18:32:47'!
+test05FindShouldBeCaseSensitive
 
 	| anOOStack sentenceFinder | 
 	
@@ -287,8 +269,8 @@ test06FindShouldBeCaseSensitive
 	
 	self assert: (sentenceFinder find: 'aaa') isEmpty.! !
 
-!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/15/2022 21:25:36'!
-test07FindReturnsTheCorrectStringWhenTheresOnlyOneStringThatMatchesPrefix
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/16/2022 18:32:52'!
+test06FindReturnsTheCorrectStringWhenTheresOnlyOneStringThatMatchesPrefix
 
 	| anOOStack sentenceFinder listOfFoundWords | 
 	
@@ -303,8 +285,8 @@ test07FindReturnsTheCorrectStringWhenTheresOnlyOneStringThatMatchesPrefix
 	self assert: (listOfFoundWords size = 1 and: (listOfFoundWords at: 1) = 'Winter is here').
 	! !
 
-!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/15/2022 21:25:42'!
-test08FindReturnsTheCorrectStringsWhenTheresMoreThanOneStringThatMatchesPrefix
+!SentenceFinderByPrefixTest methodsFor: 'tests' stamp: 'ca 5/16/2022 18:32:58'!
+test07FindReturnsTheCorrectStringsWhenTheresMoreThanOneStringThatMatchesPrefix
 
 	| anOOStack sentenceFinder listOfFoundWords | 
 	
@@ -377,35 +359,10 @@ invalidPrefixErrorDescription
 ! !
 
 
-!APrefixThatContainsABlank class methodsFor: 'validations' stamp: 'ca 5/15/2022 20:28:16'!
+!APrefixThatContainsABlank class methodsFor: 'validations' stamp: 'ca 5/16/2022 18:32:14'!
 isThisPrefixValid: aPrefix
 	
-	^ aPrefix isString and: [aPrefix includesSubString: ' ']! !
-
-
-!classDefinition: #APrefixThatsNotString category: 'Stack-Exercise'!
-InvalidPrefix subclass: #APrefixThatsNotString
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'Stack-Exercise'!
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'APrefixThatsNotString class' category: 'Stack-Exercise'!
-APrefixThatsNotString class
-	instanceVariableNames: ''!
-
-!APrefixThatsNotString class methodsFor: 'error description' stamp: 'ca 5/15/2022 19:35:19'!
-invalidPrefixErrorDescription
-
-	^ 'Prefix should be a string'.! !
-
-
-!APrefixThatsNotString class methodsFor: 'validations' stamp: 'ca 5/15/2022 19:58:17'!
-isThisPrefixValid: aPrefix
-
-	^ aPrefix isString not.! !
+	^ aPrefix includesSubString: ' '! !
 
 
 !classDefinition: #EmptyPrefix category: 'Stack-Exercise'!
